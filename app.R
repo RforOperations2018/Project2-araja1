@@ -146,6 +146,7 @@ server <- function(input, output, session=session)
   # Plot for # of crimes by age
   output$plot <- renderPlotly({
     crime=swInput()
+    # You want to use fill not colour for bar charts.
     ggplotly(ggplot(data=crime,aes(x=AGE,colour=GENDER))+
                geom_bar()+
                labs(title="Crimes by Age",x="AGE",y="# Crimes",colour="Gender")
@@ -169,6 +170,7 @@ server <- function(input, output, session=session)
     )
   })
   # Data table 
+  # I would have liked to see a subset/select call here to at least remove the x_full_text and _id columns.
   output$table <- DT::renderDataTable(crime <-swInput(), options = list(scrollX = TRUE))
 
   # Total CCR info box
@@ -202,6 +204,7 @@ server <- function(input, output, session=session)
     sp=spTransform(pitt,CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"))
     # Call Data and Build Map
     leaflet() %>%
+      # You really shouldn't have this because you are returning a single neighborhood
       setView(lng = -80.0004, lat = 40.4418, zoom = 12)%>%
       addProviderTiles(providers$OpenStreetMap.Mapnik,options = providerTileOptions(noWrap = TRUE)) %>%
       addPolygons(data=sp,color = "#444444", weight = 1, smoothFactor = 0.5,  group="HOOD")%>%
